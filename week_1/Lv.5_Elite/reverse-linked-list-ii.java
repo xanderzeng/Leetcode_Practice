@@ -1,38 +1,31 @@
 /**
  *
  *
- * 25. Reverse Nodes in k-Group
+ * 92. Reverse Linked List II
  * 
  */
 
 
 class Solution {
-    public ListNode reverseKGroup(ListNode head, int k) {
-        if(head == null || head.next == null) return head;
-        ListNode blank = new ListNode(0);
-        blank.next = head;
-        ListNode prev = blank;
-        
-        while(prev.next != null){
-            ListNode ptr = prev.next;
-            boolean canReverse = true;
-            for(int i = 1;i<k;i++){
-                if(ptr.next == null){
-                    canReverse = false;
-                    break;
+    public Node flatten(Node head) {
+        if(head == null) return head;
+        Node ptr = head;
+        while(ptr != null){
+            if(ptr.child != null){
+                Node next = ptr.next;
+                Node child = flatten(ptr.child);
+                ptr.child = null;
+                ptr.next = child;
+                child.prev = ptr;
+                if(next!= null){
+                    while(child.next != null) child = child.next;
+                    child.next = next;
+                    next.prev = child;
                 }
-                ptr = ptr.next;
+                ptr = next;
             }
-            if(!canReverse) break;
-            ptr = prev.next;
-            for(int i = 1;i<k;i++){
-                ListNode next = ptr.next;
-                ptr.next = next.next;
-                next.next = prev.next;
-                prev.next = next;
-            }
-            prev = ptr;
+            else ptr = ptr.next;
         }
-        return blank.next;
+        return head;
     }
 }
